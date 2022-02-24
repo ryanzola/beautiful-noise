@@ -1,10 +1,13 @@
 import * as THREE from 'three'
+import Experience from './Experience';
+import Background from './Background'
+import Sphere from './Sphere'
 
 export default class World
 {
     constructor(_options)
     {
-        this.experience = window.experience
+        this.experience = new Experience()
         this.config = this.experience.config
         this.scene = this.experience.scene
         this.resources = this.experience.resources
@@ -13,18 +16,18 @@ export default class World
         {
             if(_group.name === 'base')
             {
-                this.setDummy()
+                this.setBackground()
+                this.setSphere()
             }
         })
     }
 
-    setDummy()
-    {
-        const cube = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.MeshBasicMaterial({ map: this.resources.items.lennaTexture })
-        )
-        this.scene.add(cube)        
+    setBackground() {
+        this.background = new Background()
+    }
+
+    setSphere() {
+        this.sphere = new Sphere()
     }
 
     resize()
@@ -33,6 +36,11 @@ export default class World
 
     update()
     {
+        if(this.background)
+            this.background.update()
+
+        if(this.sphere)
+            this.sphere.update()
     }
 
     destroy()
