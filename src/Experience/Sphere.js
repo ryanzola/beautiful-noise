@@ -9,12 +9,24 @@ export default class Background {
     this.experience = new Experience()
     this.scene = this.experience.scene;
     this.renderer = this.experience.renderer.instance
+    this.config = this.experience.config
     this.time = this.experience.time
+    this.debug = this.experience.debug
+
+    if(this.debug) {
+      this.debugFolder = this.debug.addFolder({
+        title: 'Sphere'
+      })
+    }
 
     this.setGeometry()
     this.setMaterial()
     this.setCubeTexture()
     this.setMesh()
+  }
+
+  setDebug() {
+
   }
 
   setGeometry() {
@@ -27,9 +39,36 @@ export default class Background {
       fragmentShader: fragment,
       uniforms: {
         uTime: { value: 0 },
-        tCube: { value: 0 }
+        tCube: { value: 0 },
+        mRefractionRatio: { value: 1.02 },
+        mFresnelBias: { value: 0.1 },
+        mFresnelScale: { value: 4.0 },
+        mFresnelPower: { value: 2.0 }
       }
     })
+
+    if(this.debug) {
+      this.debugFolder.addInput(
+        this.material.uniforms.mRefractionRatio,
+        'value',
+        { label: 'refraction ratio', min: -1.2, max: 1.2, step: 0.001 }
+      )
+      this.debugFolder.addInput(
+        this.material.uniforms.mFresnelBias,
+        'value',
+        { label: 'fresnel bias', min: -2, max: 2, step: 0.001 }
+      )
+      this.debugFolder.addInput(
+        this.material.uniforms.mFresnelScale,
+        'value',
+        { label: 'fresnel scale', min: 0, max: 10, step: 0.001 }
+      )
+      this.debugFolder.addInput(
+        this.material.uniforms.mFresnelPower,
+        'value',
+        { label: 'fresnel power', min: 0, max: 10, step: 0.001 }
+      )
+    }
   }
 
   setMesh() {
